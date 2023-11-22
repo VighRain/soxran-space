@@ -37,7 +37,7 @@
     <header class="header-site">
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
-                <a class="navbar-brand" href="index.php">Service</a>
+                <a class="navbar-brand" href="#">Service</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -46,11 +46,10 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <!-- active and current = page -->
-                            <a class="nav-link active" aria-current="page">Requests</a>
+                            <a class="nav-link active" aria-current="page" href="#">Requests</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="messages.php">Messages</a>
+                            <a class="nav-link" href="#">Messages</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -66,10 +65,6 @@
             </div>
         </nav>
     </header>
-    <div>
-        <p> Здравствуйте, пользователь! <br> Ознакомтесь с предоставляемыми компанией услугами. </p>
-    </div>
-
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <button class="nav-link active" id="nav-busin-tab" data-bs-toggle="tab" data-bs-target="#nav-busin"
