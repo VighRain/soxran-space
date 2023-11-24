@@ -1,26 +1,170 @@
-<tr>
-    <th scope="row">
-    </th>
-    <td>
-    </td>
-    <td>
-    </td>
-    <td>
-    </td>
-    <td>
-    </td>
-    <td class="icons">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square"
-            viewBox="0 0 16 16">
-            <path
-                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-            <path fill-rule="evenodd"
-                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-        </svg>
-        <svg xmlns="http://www.w3.org/2000/svg" valign="middle" width="20" height="20" fill="currentColor"
-            class="bi bi-trash3" viewBox="0 0 16 16">
-            <path
-                d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />
-        </svg>
-    </td>
-</tr>
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>messages</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+</head>
+
+<body>
+    <style>
+        .nav-item.dropdown {
+            position: absolute;
+            right: 0px;
+        }
+
+        .dropdown-item {
+            text-align: right;
+        }
+
+        .dropdown-menu {
+            min-width: 90px;
+        }
+
+        .btn-primary {
+            float: right;
+        }
+
+        .icons {
+            text-align: center;
+        }
+
+        .bi-pencil-square {
+            filter: invert(19%) sepia(94%) saturate(3053%) hue-rotate(239deg) brightness(81%) contrast(100%);
+        }
+
+        .bi-trash3 {
+            filter: invert(24%) sepia(98%) saturate(3318%) hue-rotate(3deg) brightness(104%) contrast(105%);
+        }
+    </style>
+    <style>
+        .message-in {
+            text-align: left;
+        }
+
+        .message-out {
+            text-align: right;
+        }
+
+        .message {
+            background-color: lightgrey;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            display: inline-block;
+            max-width: 80%;
+        }
+    </style>
+    <?php include "header.php" ?>
+    <?php
+    $selected_conv = $_GET['id'] ?? "";
+    $current_user_id = 1;
+    $tmp_users = [
+        [
+            "id" => 1,
+            "name" => "User 1"
+        ],
+        [
+            "id" => 2,
+            "name" => "User 2"
+        ],
+        [
+            "id" => 3,
+            "name" => "User 3"
+        ],
+        [
+            "id" => 4,
+            "name" => "User 4"
+        ],
+
+    ];
+
+    if ($selected_conv) {
+        $mysql = new mysqli('localhost', 'root', 'YES', 'services');
+        $messages = $mysql->query("SELECT * FROM messages WHERE (to_id={$current_user_id} OR from_id={$current_user_id}) AND (to_id={$selected_conv} OR from_id={$selected_conv})");
+        $mysql->close();
+    }
+    ?>
+    <div class="container mt-3">
+        <div class="row">
+            <!-- People List -->
+            <div class="col-md-4">
+                <div class="list-group">
+                    <?php
+                    foreach ($tmp_users as $user) {
+                        ?>
+                        <a href="?id=<?php echo $user['id']; ?>"
+                            class="list-group-item list-group-item-action <?php echo $selected_conv == $user['id'] ? "active" : ""; ?>">
+                            <?php echo $user['name']; ?>
+                        </a>
+                        <?php
+                    }
+                    ?>
+                    <!-- Add more people here -->
+                </div>
+            </div>
+
+            <!-- Messages Section -->
+            <div class="col-md-8">
+                <div class="border rounded p-3 mb-3" style="height: 400px; overflow-y: auto;">
+                    <?php
+                    if (!$selected_conv) {
+                        echo "choose conversation";
+                    } else {
+                        while ($row = mysqli_fetch_array($messages)) {
+
+                            ?>
+                            <div class="<?php echo $row['from_id'] == $current_user_id ? "message-out" : "message-in" ?>"><span
+                                    class="message">
+                                    <?php echo $row['text']; ?>
+                                </span></div>
+                            <?php
+                        }
+                    }
+                    ?>
+                    <!-- Add more messages here -->
+                </div>
+
+                <!-- Message Input -->
+                <div class="input-group">
+                    <input id="msg" type="text" class="form-control" placeholder="Enter message...">
+                    <div class="input-group-append">
+                        <button onclick="sendMessage()" class="btn btn-primary" type="button">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script>
+        function sendMessage() {
+            <?php if ($selected_conv) { ?>
+                var from_id = <?php echo $current_user_id; ?>;
+                var to_id = <?php echo $selected_conv; ?>;
+                var text = $("#msg")[0].value;
+
+                $.ajax({
+                    url: "api/send_message.php",
+                    type: "POST",
+                    data: "&from_id=" + from_id + "&to_id=" + to_id + "&text=" + text,
+                    success: function () {
+                        location.reload();
+                    }
+                });
+            <?php } ?>
+        }
+    </script>
+</body>
+
+</html>
