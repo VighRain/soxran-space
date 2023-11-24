@@ -1,9 +1,9 @@
 <?php
-$id = trim(@$_POST['id']);
-$model = trim(@$_POST['model']);
-$name = trim(@$_POST['name']);
-$price = trim(@$_POST['price']);
-$description = trim(@$_POST['description']);
+$id = trim(@$_POST['id_busin']);
+$model = trim(@$_POST['model_busin']);
+$name = trim(@$_POST['name_busin']);
+$price = trim(@$_POST['price_busin']);
+$description = trim(@$_POST['description_busin']);
 
 $mysql = new mysqli('localhost', 'root', 'YES', 'services');
 
