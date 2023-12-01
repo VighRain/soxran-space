@@ -1,3 +1,10 @@
+<?php
+if (!@$_COOKIE['user']) {
+    header('Location: acc/main.php');
+    die();
+}
+?>
+
 <header class="header-site">
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
@@ -10,7 +17,6 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <!-- active and current = page -->
                         <a class="nav-link" aria-current="page" href="requests.php">Requests</a>
                     </li>
                     <li class="nav-item">
@@ -19,10 +25,10 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
-                            Account
+                            <?php echo $_COOKIE['user']; ?>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Exit</a></li>
+                            <li><a class="dropdown-item" href="acc/logout.php">Exit</a></li>
                         </ul>
                     </li>
                 </ul>

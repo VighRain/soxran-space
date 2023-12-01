@@ -5,11 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>messages</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <?php include "scripts.php" ?>
 </head>
 
 <body>
@@ -64,53 +60,47 @@
     <?php include "header.php" ?>
     <?php
     $selected_conv = $_GET['id'] ?? "";
-    $current_user_id = 1;
-    $tmp_users = [
-        [
-            "id" => 1,
-            "name" => "User 1"
-        ],
-        [
-            "id" => 2,
-            "name" => "User 2"
-        ],
-        [
-            "id" => 3,
-            "name" => "User 3"
-        ],
-        [
-            "id" => 4,
-            "name" => "User 4"
-        ],
+    $current_user_id = $_COOKIE['user'];
 
-    ];
+
+
+    $mysql = new mysqli('localhost', 'root', 'YES', 'services');
+
+
+    $result_users = $mysql->query("SELECT * FROM user WHERE role_user = 'admin' OR role_user ='employee'");
+
+
+    $users = array();
+    while ($row = mysqli_fetch_array($result_users)) {
+        $users[] = $row;
+    }
 
     if ($selected_conv) {
-        $mysql = new mysqli('localhost', 'root', 'YES', 'services');
-        $messages = $mysql->query("SELECT * FROM messages WHERE (to_id={$current_user_id} OR from_id={$current_user_id}) AND (to_id={$selected_conv} OR from_id={$selected_conv})");
-        $mysql->close();
+
+        $messages = $mysql->query("SELECT * FROM messages WHERE (to_id='{$current_user_id}' AND from_id='{$selected_conv}') OR (from_id='{$current_user_id}' AND to_id='{$selected_conv}')");
+
     }
+
+
+    $mysql->close();
     ?>
     <div class="container mt-3">
         <div class="row">
-            <!-- People List -->
             <div class="col-md-4">
                 <div class="list-group">
                     <?php
-                    foreach ($tmp_users as $user) {
+                    foreach ($users as $user) {
                         ?>
-                        <a href="?id=<?php echo $user['id']; ?>"
-                            class="list-group-item list-group-item-action <?php echo $selected_conv == $user['id'] ? "active" : ""; ?>">
-                            <?php echo $user['name']; ?>
+                        <a href="?id=<?php echo $user['email_user']; ?>"
+                            class="list-group-item list-group-item-action <?php echo $selected_conv == $user['email_user'] ? "active" : ""; ?>">
+                            <?php echo $user['email_user']; ?>
                         </a>
                         <?php
                     }
                     ?>
-                    <!-- Add more people here -->
                 </div>
             </div>
 
-            <!-- Messages Section -->
             <div class="col-md-8">
                 <div class="border rounded p-3 mb-3" style="height: 400px; overflow-y: auto;">
                     <?php
@@ -128,10 +118,8 @@
                         }
                     }
                     ?>
-                    <!-- Add more messages here -->
                 </div>
 
-                <!-- Message Input -->
                 <div class="input-group">
                     <input id="msg" type="text" class="form-control" placeholder="Enter message...">
                     <div class="input-group-append">
@@ -143,15 +131,11 @@
     </div>
 
 
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-        crossorigin="anonymous"></script>
     <script>
         function sendMessage() {
             <?php if ($selected_conv) { ?>
-                var from_id = <?php echo $current_user_id; ?>;
-                var to_id = <?php echo $selected_conv; ?>;
+                var from_id = '<?php echo $current_user_id; ?>';
+                var to_id = '<?php echo $selected_conv; ?>';
                 var text = $("#msg")[0].value;
 
                 $.ajax({
@@ -159,7 +143,10 @@
                     type: "POST",
                     data: "&from_id=" + from_id + "&to_id=" + to_id + "&text=" + text,
                     success: function () {
-                        location.reload();
+                        fetch(location.href).then(data => data.text()).then(data => {
+                            document.getElementsByTagName('html')[0].innerHTML = data;
+                        });
+
                     }
                 });
             <?php } ?>
