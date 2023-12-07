@@ -2,7 +2,7 @@
 
 $id_req = isset($_POST['id_req']) ? trim($_POST['id_req']) : null;
 
-$mysql = new mysqli('localhost', 'root', 'YES', 'services');
+$mysql = new mysqli('localhost', 'root', 'YES', 'service');
 
 if ($mysql->connect_error) {
     die("Connection failed: " . $mysql->connect_error);

@@ -5,7 +5,7 @@ $name = trim(@$_POST['name_busin']);
 $price = trim(@$_POST['price_busin']);
 $description = trim(@$_POST['description_busin']);
 
-$mysql = new mysqli('localhost', 'root', 'YES', 'services');
+$mysql = new mysqli('localhost', 'root', 'YES', 'service');
 
 if ($mysql->connect_error) {
     die("Connection failed: " . $mysql->connect_error);

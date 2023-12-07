@@ -4,7 +4,7 @@ $model = trim(@$_POST['model_tech']);
 $name = trim(@$_POST['name_tech']);
 $assets = trim(@$_POST['it_assets_tech']);
 
-$mysql = new mysqli('localhost', 'root', 'YES', 'services');
+$mysql = new mysqli('localhost', 'root', 'YES', 'service');
 
 if ($mysql->connect_error) {
     die("Connection failed: " . $mysql->connect_error);

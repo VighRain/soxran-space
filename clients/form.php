@@ -20,7 +20,7 @@
     <?php
 
 
-    $mysql = new mysqli('localhost', 'root', 'YES', 'services');
+    $mysql = new mysqli('localhost', 'root', 'YES', 'service');
 
     if ($mysql->connect_error) {
         die("Connection failed: " . $mysql->connect_error);

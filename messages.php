@@ -64,10 +64,10 @@
 
 
 
-    $mysql = new mysqli('localhost', 'root', 'YES', 'services');
+    $mysql = new mysqli('localhost', 'root', 'YES', 'service');
 
 
-    $result_users = $mysql->query("SELECT * FROM user WHERE role_user = 'admin' OR role_user ='employee'");
+    $result_users = $mysql->query("SELECT * FROM user WHERE role_user = 'admin' OR role_user ='employee' OR role_user ='spec'");
 
 
     $users = array();

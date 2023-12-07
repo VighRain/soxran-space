@@ -9,7 +9,7 @@
 </head>
 
 <?php
-$mysql = new mysqli('localhost', 'root', 'YES', 'services');
+$mysql = new mysqli('localhost', 'root', 'YES', 'service');
 $result_busin = $mysql->query("SELECT * FROM busin");
 $result_tech = $mysql->query("SELECT * FROM tech");
 $mysql->close();

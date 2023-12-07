@@ -9,18 +9,23 @@
 </head>
 
 <?php
-$mysql = new mysqli('localhost', 'root', 'YES', 'services');
+$mysql = new mysqli('localhost', 'root', 'YES', 'service');
 
 if ($_COOKIE['role'] == 'admin') {
     $result_req = $mysql->query("SELECT * FROM req");
+} elseif ($_COOKIE['role'] == 'spec') {
+    $result_req = $mysql->query("SELECT * FROM req WHERE responsible_req='" . $_COOKIE['user'] . "' OR responsible_req='" . "" . "'");
 } else {
-    $result_req = $mysql->query("SELECT * FROM req WHERE responsible_req='" . $_COOKIE['user'] . "' OR contractor_req='" . $_COOKIE['user'] . "'");
+    $result_req = $mysql->query("SELECT * FROM req WHERE contractor_req='" . $_COOKIE['user'] . "'");
 }
 $result_tech = $mysql->query("SELECT * FROM tech");
 $result_busin = $mysql->query("SELECT * FROM busin");
 
-$result_users = $mysql->query("SELECT * FROM user WHERE role_user = 'admin' OR role_user ='employee'");
-
+if ($_COOKIE['role'] == 'spec') {
+    $result_users = $mysql->query("SELECT * FROM user WHERE email_user = '{$_COOKIE['user']}'");
+} else {
+    $result_users = $mysql->query("SELECT * FROM user WHERE role_user = 'admin' OR role_user ='spec'");
+}
 
 $mysql->close();
 
@@ -101,8 +106,8 @@ while ($row = mysqli_fetch_array($result_busin)) {
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="staticBackdropReqLabel">Добавление бизнес
-                                            услуги
+                                        <h1 class="modal-title fs-5" id="staticBackdropReqLabel">Добавление заявки об
+                                            инциденте
                                         </h1>
                                     </div>
                                     <div class="modal-body">
@@ -138,7 +143,7 @@ while ($row = mysqli_fetch_array($result_busin)) {
 
                                         <div class="input-group mb-3">
                                             <div class='dropdown req'>
-                                                <button class='btn btn-secondary dropdown-toggle req' type='button'
+                                                <button class='btn btn-secondary dropdown-toggle req user' type='button'
                                                     data-bs-toggle='dropdown' aria-expanded='false'
                                                     id="responsible_req_title">
                                                     choose user
@@ -214,10 +219,39 @@ while ($row = mysqli_fetch_array($result_busin)) {
                             HTML;
                         }
                         $btn_dis = "";
-                        if ($_COOKIE["role"] != 'admin') {
+                        if ($_COOKIE["role"] == 'employee') {
                             $btn_dis = "disabled";
                         }
+                        if ($_COOKIE["role"] == 'spec') {
+                            ?>
+                            <style>
+                                .btn.btn-primary {
+                                    background: transparent;
+                                    border: none !important;
+                                    font-size: 0;
+                                }
+                            </style>
+                            <?php
+                        }
+                        if ($_COOKIE["role"] == 'employee') {
+                            ?>
+                            <style>
+                                .btn.btn-secondary.dropdown-toggle.req.user {
+                                    background: transparent;
+                                    border: none !important;
+                                    font-size: 0;
+                                }
+                            </style>
+                            <?php
+                        }
+                        ?>
+
+                        <?php
                         while ($row = mysqli_fetch_array($result_req)) {
+                            $btn_dis_spec = false;
+                            if ($_COOKIE['role'] == 'spec' && $row['responsible_req']) {
+                                $btn_dis_spec = "disabled";
+                            }
                             $aaaaa = str_replace("id_req", $row['id_req'], $users_to_assign);
                             echo <<<HTML
                             <tr>
@@ -227,7 +261,7 @@ while ($row = mysqli_fetch_array($result_busin)) {
                                 <td>{$row['theme_req']}</td>
                                 <td>
                                     <div class='dropdown req'>
-                                        <button {$btn_dis} class='btn btn-secondary dropdown-toggle req' type='button' data-bs-toggle='dropdown' aria-expanded='false'>
+                                        <button {$btn_dis} {$btn_dis_spec} class='btn btn-secondary dropdown-toggle req' type='button' data-bs-toggle='dropdown' aria-expanded='false'>
                                             {$row['responsible_req']}
                                         </button>
                                         <ul class='dropdown-menu req'>
@@ -238,7 +272,7 @@ while ($row = mysqli_fetch_array($result_busin)) {
                                 <td>{$row['contractor_req']}</td>
                                 <td>
                                     <div class='dropdown req'>
-                                        <button class='btn btn-secondary dropdown-toggle req' type='button' data-bs-toggle='dropdown' aria-expanded='false'>
+                                        <button {$btn_dis} class='btn btn-secondary dropdown-toggle req' type='button' data-bs-toggle='dropdown' aria-expanded='false'>
                                             {$row['status_req']}
                                         </button>
                                         <ul class='dropdown-menu req'>
