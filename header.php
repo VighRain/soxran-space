@@ -7,7 +7,7 @@ if (!@$_COOKIE['user']) {
 
 <style>
     .header-site {
-        background-color: #DFDFDF;
+        background-color: #E9E9E9;
     }
 </style>
 <header class="header-site">
