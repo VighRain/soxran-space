@@ -5,6 +5,11 @@ if (!@$_COOKIE['user']) {
 }
 ?>
 
+<style>
+    .header-site {
+        background-color: #DFDFDF;
+    }
+</style>
 <header class="header-site">
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
